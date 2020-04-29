@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+ http://www.springframework.org/schema/context
+   http://www.springframework.org/schema/context/spring-context-3.0.xsd
+   http://www.springframework.org/schema/data/jpa 
+    http://www.springframework.org/schema/data/jpa/spring-jpa-1.0.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+
+<bean id="dateFormat" class="java.text.SimpleDateFormat">
+	<constructor-arg value="dd/MM/yyyy" />
+</bean>
+
+<context:component-scan
+		base-package="com.cognizant.moviecruiser" />
+	
+<!-- Configure the data source bean-->
+	<bean name="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/moviecruiser" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+	</bean>
+
+	<!-- Create default configuration for Hibernate -->
+	<bean id="hibernateJpaVendorAdapter"
+		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+
+	<!-- Configure the entity manager factory bean -->
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter" />
+		<!-- Set JPA properties -->
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<prop key="hibernate.enable_lazy_load_no_trans">true</prop>
+				<prop key="javax.persistence.schema-generation.database.action">none</prop>
+				<prop key="hibernate.ejb.use_class_enhancer">true</prop>
+			</props>
+		</property>
+		<!-- Set base package of your entities -->
+		<property name="packagesToScan" value="com.cognizant.truyum" />
+		<!-- Set share cache mode -->
+		<property name="sharedCacheMode" value="ENABLE_SELECTIVE" />
+		<!-- Set validation mode -->
+		<property name="validationMode" value="NONE" />
+	</bean>
+
+	<!-- Configure the transaction manager bean -->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+
+	<!-- Enable annotation driven transaction management -->
+	<tx:annotation-driven />
+
+	<!-- Configure Spring Data JPA and set the base package of the repository 
+		interfaces -->
+	<jpa:repositories base-package="com.cognizant.moviecruiser.repository" />
+
+<!-- Bean for Joker (1, "Joker", $99, true, DateUtil.convertToDate
+("04/10/2019"),"Super Villan", true)-->
+<bean class="com.cognizant.moviecruiser.model.Movie" id="joker">
+	<property name="id" value="1"/>
+	<property name="title" value="Joker"/>
+	<property name="boxOffice" value="$99"/>
+	<property name="active" value="true"/>
+	<property name="dateOfLaunch">
+	<bean factory-bean="dateFormat" factory-method="parse">
+		<constructor-arg value="04/10/2019" />
+	</bean>
+	</property>
+	<property name="genre" value="Super Villan"/>
+	<property name="hasTeaser" value="true"/>
+</bean>
+
+<!-- Bean for Avengers:Endgame (2, "Avengers:Endgame", $279, true, DateUtil.convertToDat
+e("22/04/2019"),"Super Heros", true)-->
+<bean class="com.cognizant.moviecruiser.model.Movie" id="avengers">
+	<property name="id" value="2"/>
+	<property name="title" value="Avengers:Endgame"/>
+	<property name="boxOffice" value="$279"/>
+	<property name="active" value="true"/>
+	<property name="dateOfLaunch">
+	<bean factory-bean="dateFormat" factory-method="parse">
+		<constructor-arg value="22/04/2019" />
+	</bean>
+	</property>
+	<property name="genre" value="Super Heros"/>
+	<property name="hasTeaser" value="true"/>
+</bean>
+
+<!-- Bean for Arrival (3, "Arrival", $203, false, DateUtil.convertToDat
+e("01/09/2016"),"Science Fiction", false)-->
+<bean class="com.cognizant.moviecruiser.model.Movie" id="arrival">
+	<property name="id" value="3"/>
+	<property name="title" value="Arrival"/>
+	<property name="boxOffice" value="$203"/>
+	<property name="active" value="false"/>
+	<property name="dateOfLaunch">
+	<bean factory-bean="dateFormat" factory-method="parse">
+		<constructor-arg value="01/09/2016" />
+	</bean>
+	</property>
+	<property name="genre" value="Science Fiction"/>
+	<property name="hasTeaser" value="false"/>
+</bean>
+<!-- Bean for Dwitiyo Purush (4, "Dwitiyo Purush", $47, true, DateUtil.convertToDat
+e("23/01/2020"),"Bengali Art Flim", true)-->
+<bean class="com.cognizant.moviecruiser.model.Movie" id="dwitiyopurush">
+	<property name="id" value="4"/>
+	<property name="title" value="Dwitiyo Purush"/>
+	<property name="boxOffice" value="$47"/>
+	<property name="active" value="true"/>
+	<property name="dateOfLaunch">
+	<bean factory-bean="dateFormat" factory-method="parse">
+		<constructor-arg value="23/01/2020" />
+	</bean>
+	</property>
+	<property name="genre" value="Bengali Art Flim"/>
+	<property name="hasTeaser" value="true"/>
+</bean>
+<!-- Bean for Sooryavanshi (5, "Sooryavanshi", $00, false, DateUtil.convertToDat
+e("23/11/2020"),"Super Action", true)-->
+<bean class="com.cognizant.moviecruiser.model.Movie" id="sooryavanshi">
+	<property name="id" value="5"/>
+	<property name="title" value="Sooryavanshi"/>
+	<property name="boxOffice" value="$00"/>
+	<property name="active" value="false"/>
+	<property name="dateOfLaunch">
+	<bean factory-bean="dateFormat" factory-method="parse">
+		<constructor-arg value="23/11/2020" />
+	</bean>
+	</property>
+	<property name="genre" value="Super Action"/>
+	<property name="hasTeaser" value="true"/>
+</bean>
+<!-- Bean for menuItemList -->
+<bean class="java.util.ArrayList" id="movie">
+	<constructor-arg>
+		<list>
+		<ref bean="joker"/>
+		<ref bean="avengers"/>
+		<ref bean="arrival"/>
+		<ref bean="dwitiyopurush"/>
+		<ref bean="sooryavanshi"/>
+		</list>
+	</constructor-arg>
+</bean>
+
+<bean class="com.cognizant.moviecruiser.dao.MovieDaoCollectionImpl" id="movieDaoCollectionImpl">
+	<property name="movieList" ref="movie"/>
+</bean>
+<bean class="com.cognizant.moviecruiser.service.MovieService" id="movieService">
+ 	<property name="movieDao" ref="movieDaoCollectionImpl"/>
+</bean>
+</beans>
+
